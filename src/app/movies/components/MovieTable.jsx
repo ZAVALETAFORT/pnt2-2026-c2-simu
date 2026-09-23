@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; //4. agrgo el router para pag detalle
 
 export default function MovieTable({ movies }) {
   const [search, setSearch] = useState("");
 
   const [userEmail, setUserEmail] = useState(null);
   const [favorites, setFavorites] = useState([]);
+  const router = useRouter(); //4. agrgo el router para pag detalle
 
   useEffect(() => {
     const email = localStorage.getItem("userEmail");
@@ -88,7 +90,8 @@ export default function MovieTable({ movies }) {
                   type="button"
                   className="block text-left text-inherit"
                   onClick={() => {
-                    console.log(`Seleccionada película: ${movie._id} - ${movie.title}`);
+                    router.push(`/movies/${movie._id}`); //4. redirijo a la pagina de detalle
+                    //console.log(`Seleccionada película: ${movie._id} - ${movie.title}`);
                     // TODO: redirigir al detalle cuando exista la ruta
                   }}
                 >
