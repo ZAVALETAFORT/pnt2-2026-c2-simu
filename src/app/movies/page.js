@@ -4,16 +4,24 @@ import MovieTable from "./components/MovieTable";
 const MOVIES_ENDPOINT =
   "https://tp2backend-a5aqduchhdfrdffm.brazilsouth-01.azurewebsites.net/api/movies";
 
-async function getMovies() {
-  const res = await fetch(MOVIES_ENDPOINT, { next: { revalidate: 60 } });
+//agrego page y limit para la paginiacion
+  async function getMovies(page, limit) {
+  
+  const res = await fetch(`${MOVIES_ENDPOINT}?page=${page}&limit=${limit}`, { next: { revalidate: 60 } });
   if (!res.ok) {
     throw new Error("No se pudo obtener el listado de películas");
   }
   return res.json();
 }
 
-export default async function MoviesPage() {
-  const movies = await getMovies();
+//5 agrego search parameters para la busqueda
+export default async function MoviesPage({ searchParams }) {
+  const params = await searchParams;
+
+  const page = params?.page ? parseInt(params.page) : 1;
+  const limit = params?.limit ? parseInt(params.limit) : 5;
+
+  const movies = await getMovies(page, limit);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -29,6 +37,23 @@ export default async function MoviesPage() {
         </div>
 
         <MovieTable movies={movies} />
+
+<div>
+  {page > 1 && (
+    <Link href={`/movies?page=${page - 1}&limit=${limit}`}>
+      Anterior
+    </Link>
+  )}
+
+  {" "}
+
+  {movies.length === limit && (
+    <Link href={`/movies?page=${page + 1}&limit=${limit}`}>
+      Siguiente
+    </Link>
+  )}
+</div>
+        
       </main>
     </div>
   );
