@@ -38,14 +38,14 @@ export default async function MoviesPage({ searchParams }) {
 
         <MovieTable movies={movies} />
 
-<div>
+<div className="mt-4 flex justify-center gap-6 text-sm">
   {page > 1 && (
     <Link href={`/movies?page=${page - 1}&limit=${limit}`}>
       Anterior
     </Link>
   )}
 
-  {" "}
+  <span>Página {page}</span>
 
   {movies.length === limit && (
     <Link href={`/movies?page=${page + 1}&limit=${limit}`}>
